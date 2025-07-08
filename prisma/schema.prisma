@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model EBranchProduct {
+  id        String   @id @default(uuid())
+  branchId  String
+  productId String
+  colorCode String
+  stock     Int
+  available Boolean @default(true)
+  branch   EBranch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([branchId, productId], name: "branchId_productId")
+
+  @@index([id, branchId, productId, available])
+}
+
+model EBranch {
+  id   String    @id @default(uuid())
+  name String
+  location String
+  available Boolean @default(true)
+
+
+  branchProducts EBranchProduct[]
+
+  @@index([id, name, available])
+}
+

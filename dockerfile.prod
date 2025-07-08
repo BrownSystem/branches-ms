@@ -1,0 +1,47 @@
+# Etapa 1: Instalar todas las dependencias (prod y dev)
+FROM node:20-slim AS deps
+
+WORKDIR /app
+
+# Instalar openssl en la etapa de dependencias para que Prisma no falle
+RUN apt-get update -y && apt-get install -y openssl
+
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
+
+# Etapa 2: Build y Prisma
+FROM node:20-slim AS build
+
+WORKDIR /app
+
+# Instalar openssl también en esta etapa por si prisma lo requiere durante el build
+RUN apt-get update -y && apt-get install -y openssl
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Generar cliente Prisma y compilar TypeScript
+RUN npx prisma generate
+RUN npm run build
+
+# Etapa 3: Imagen final de producción
+FROM node:20-slim
+
+WORKDIR /app
+
+# Instalar openssl en producción
+RUN apt-get update -y && apt-get install -y openssl
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/prisma ./prisma
+COPY package.json ./
+COPY .env ./              
+
+# Copiamos el script de inicio
+COPY start.sh .
+RUN chmod +x start.sh
+
+EXPOSE 3003
+
+CMD ["./start.sh"]
