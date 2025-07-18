@@ -209,21 +209,7 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
   async decreaseStock(dto: ManipulateStockDto) {
     const { id, stock } = dto;
 
-    if (!Number.isInteger(stock) || stock <= 0) {
-      throw new RpcException({
-        message: '[STOCK] El valor de stock debe ser un número entero positivo',
-        status: HttpStatus.BAD_REQUEST,
-      });
-    }
-
     const branchProduct = await this._findBranchProductOrThrow(id);
-
-    if (stock > branchProduct.stock) {
-      throw new RpcException({
-        message: `[STOCK] No se puede restar más stock (${stock}) que el disponible (${branchProduct.stock})`,
-        status: HttpStatus.BAD_REQUEST,
-      });
-    }
 
     return this._updateStock(id, branchProduct.stock - stock);
   }
