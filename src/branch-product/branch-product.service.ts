@@ -22,14 +22,19 @@ import { NATS_SERVICE } from 'src/config';
 export class BranchProductService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger(BranchProductService.name);
 
-  private async _findBranchProductOrThrow(id: string) {
+  private async _findBranchProductOrThrow(productId: string, branchId: string) {
     const branchProduct = await this.eBranchProduct.findUnique({
-      where: { id },
+      where: {
+        branchId_productId: {
+          branchId,
+          productId,
+        },
+      },
     });
 
     if (!branchProduct) {
       throw new RpcException({
-        message: `[STOCK] No se encontró el registro branchProduct con id ${id}`,
+        message: `[STOCK] No se encontró el registro branchProduct con id ${productId} y branchId ${branchId}`,
         status: HttpStatus.NOT_FOUND,
       });
     }
@@ -201,17 +206,25 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
   }
 
   async increaseStock(dto: ManipulateStockDto) {
-    const branchProduct = await this._findBranchProductOrThrow(dto.id);
+    const { productId, branchId, stock } = dto;
 
-    return this._updateStock(dto.id, branchProduct.stock + dto.stock);
+    const branchProduct = await this._findBranchProductOrThrow(
+      productId,
+      branchId,
+    );
+
+    return this._updateStock(branchProduct.id, branchProduct.stock + stock);
   }
 
   async decreaseStock(dto: ManipulateStockDto) {
-    const { id, stock } = dto;
+    const { productId, branchId, stock } = dto;
 
-    const branchProduct = await this._findBranchProductOrThrow(id);
+    const branchProduct = await this._findBranchProductOrThrow(
+      productId,
+      branchId,
+    );
 
-    return this._updateStock(id, branchProduct.stock - stock);
+    return this._updateStock(branchProduct.id, branchProduct.stock - stock);
   }
 
   async unregisterBranchProduct(dto: UpdateBranchProductToRegister) {
