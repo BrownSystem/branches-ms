@@ -14,10 +14,6 @@ export class CreateBranchProductDto {
   @IsString()
   productId: string;
 
-  @IsString()
-  @IsOptional()
-  colorCode: string;
-
   @IsNumber()
   @IsOptional()
   stock: number;

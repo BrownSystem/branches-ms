@@ -59,7 +59,7 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
   }
 
   async create(createDto: CreateBranchProductDto) {
-    const { productId, stock = 0, colorCode = 'default' } = createDto;
+    const { productId, stock = 0 } = createDto;
 
     const [branches, product] = await Promise.all([
       this.eBranch.findMany(),
@@ -89,7 +89,6 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
             branchId: branch.id,
             productId,
             stock,
-            colorCode,
           },
         }),
       ),
@@ -139,7 +138,7 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
           price: any;
           colorCode: any;
         }) => {
-          const { productId, stock, price, colorCode } = branchProduct;
+          const { productId, stock, price } = branchProduct;
 
           const product = await firstValueFrom(
             this.client.send({ cmd: 'find_one_product' }, { id: productId }),
@@ -147,7 +146,6 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
 
           return {
             ...product,
-            colorCode,
             price,
             stock,
           };

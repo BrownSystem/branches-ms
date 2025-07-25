@@ -52,7 +52,6 @@ export class BranchesService extends PrismaClient implements OnModuleInit {
           productId: product.id,
           branchId: newBranch.id,
           stock: 0,
-          colorCode: 'default',
         }));
 
         await this.eBranchProduct.createMany({
@@ -113,7 +112,6 @@ export class BranchesService extends PrismaClient implements OnModuleInit {
         branchProducts: {
           select: {
             productId: true,
-            colorCode: true,
             stock: true,
           },
         },
@@ -161,13 +159,14 @@ export class BranchesService extends PrismaClient implements OnModuleInit {
     if (!branchId) {
       return { message: 'Branch not found', statusCode: HttpStatus.NOT_FOUND };
     }
-    const { name, location } = updateBranchDto;
+    const { name, location, available } = updateBranchDto;
 
     const updatedBranch = await this.eBranch.update({
       where: { id },
       data: {
         name,
         location: location || 'no tiene ubicación',
+        available,
       },
     });
 
