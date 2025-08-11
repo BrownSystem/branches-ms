@@ -1,4 +1,4 @@
-import { IsPositive, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class FindProductBranchIdDto {
   @IsString()
@@ -6,4 +6,8 @@ export class FindProductBranchIdDto {
 
   @IsString()
   branchId: string;
+
+  @IsOptional()
+  @IsBoolean()
+  filterByStock: boolean;
 }

@@ -10,7 +10,7 @@ import * as ExcelJS from 'exceljs';
 import { CreateBranchProductDto } from './dto/create-branch-product.dto';
 import { EBranchProduct, PrismaClient } from '@prisma/client';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, find } from 'rxjs';
 import { ManipulateStockDto } from './dto/manipulate-stock.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { PaginateWithMeta } from './dto/pagination.helper';
@@ -96,11 +96,31 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
   }
 
   async findOneProductBranchId(findProductBranchIdDto: FindProductBranchIdDto) {
-    const { productId, branchId } = findProductBranchIdDto;
+    const { productId, branchId, filterByStock } = findProductBranchIdDto;
 
     const branchProduct = await this.eBranchProduct.findFirst({
       where: { branchId, productId, available: true },
     });
+
+    if (filterByStock) {
+      const branchProduct = await this.eBranchProduct.findFirst({
+        where: {
+          branchId,
+          productId,
+          available: true,
+          stock: {
+            not: 0,
+          },
+        },
+      });
+      if (!branchProduct) {
+        throw new BadRequestException(
+          '[BRANCH_PRODUCT_ID] Branch product not found',
+        );
+      }
+
+      return branchProduct;
+    }
 
     if (!branchProduct) {
       throw new BadRequestException(
