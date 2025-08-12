@@ -11,20 +11,20 @@ export declare class BranchesService extends PrismaClient implements OnModuleIni
     create(createBranchDto: CreateBranchDto): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     }>;
     findAll(): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     }[]>;
     findOneBranchById(id: string): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     } | {
         message: string;
         status: HttpStatus;
@@ -33,7 +33,6 @@ export declare class BranchesService extends PrismaClient implements OnModuleIni
         branchProducts: {
             description: any;
             productId: string;
-            colorCode: string;
             stock: number;
         }[];
         name: string;
@@ -43,8 +42,8 @@ export declare class BranchesService extends PrismaClient implements OnModuleIni
     update(id: string, updateBranchDto: UpdateBranchDto): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     } | {
         message: string;
         statusCode: HttpStatus;

@@ -7,8 +7,8 @@ export declare class NotificationService extends PrismaClient implements OnModul
     private readonly logger;
     onModuleInit(): void;
     create(data: CreateNotificationDto): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -17,8 +17,8 @@ export declare class NotificationService extends PrismaClient implements OnModul
         createdAt: Date;
     }>;
     findAll(query: QueryNotificationDto): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -27,8 +27,8 @@ export declare class NotificationService extends PrismaClient implements OnModul
         createdAt: Date;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -37,8 +37,8 @@ export declare class NotificationService extends PrismaClient implements OnModul
         createdAt: Date;
     } | null>;
     update(id: string, data: UpdateNotificationDto): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -47,8 +47,8 @@ export declare class NotificationService extends PrismaClient implements OnModul
         createdAt: Date;
     }>;
     softDelete(id: string): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;

@@ -16,9 +16,8 @@ export declare class BranchProductService extends PrismaClient implements OnModu
     create(createDto: CreateBranchProductDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }[] | {
         message: string;
@@ -27,9 +26,8 @@ export declare class BranchProductService extends PrismaClient implements OnModu
     findOneProductBranchId(findProductBranchIdDto: FindProductBranchIdDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }>;
     productsStockAtBranchId(paginationDto: PaginationDto): Promise<{
@@ -65,25 +63,22 @@ export declare class BranchProductService extends PrismaClient implements OnModu
     increaseStock(dto: ManipulateStockDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }>;
     decreaseStock(dto: ManipulateStockDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }>;
     unregisterBranchProduct(dto: UpdateBranchProductToRegister): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     } | {
         message: string;
@@ -99,9 +94,8 @@ export declare class BranchProductService extends PrismaClient implements OnModu
         data: {
             id: string;
             available: boolean;
-            branchId: string;
             productId: string;
-            colorCode: string;
+            branchId: string;
             stock: number;
         };
         error?: undefined;

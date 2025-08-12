@@ -56,7 +56,7 @@ let BranchProductService = BranchProductService_1 = class BranchProductService e
         void this.$connect();
     }
     async create(createDto) {
-        const { productId, stock = 0, colorCode = 'default' } = createDto;
+        const { productId, stock = 0 } = createDto;
         const [branches, product] = await Promise.all([
             this.eBranch.findMany(),
             (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'find_one_product' }, { id: productId })),
@@ -79,15 +79,30 @@ let BranchProductService = BranchProductService_1 = class BranchProductService e
                 branchId: branch.id,
                 productId,
                 stock,
-                colorCode,
             },
         })));
     }
     async findOneProductBranchId(findProductBranchIdDto) {
-        const { productId, branchId } = findProductBranchIdDto;
+        const { productId, branchId, filterbystock } = findProductBranchIdDto;
         const branchProduct = await this.eBranchProduct.findFirst({
             where: { branchId, productId, available: true },
         });
+        if (filterbystock) {
+            const branchProduct = await this.eBranchProduct.findFirst({
+                where: {
+                    branchId,
+                    productId,
+                    available: true,
+                    stock: {
+                        not: 0,
+                    },
+                },
+            });
+            if (!branchProduct) {
+                throw new common_1.BadRequestException('[BRANCH_PRODUCT_ID] Branch product not found');
+            }
+            return branchProduct;
+        }
         if (!branchProduct) {
             throw new common_1.BadRequestException('[BRANCH_PRODUCT_ID] Branch product not found');
         }
@@ -110,11 +125,10 @@ let BranchProductService = BranchProductService_1 = class BranchProductService e
             pagination: paginationDto,
         });
         const products = await Promise.all(paginated.data.map(async (branchProduct) => {
-            const { productId, stock, price, colorCode } = branchProduct;
+            const { productId, stock, price } = branchProduct;
             const product = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'find_one_product' }, { id: productId }));
             return {
                 ...product,
-                colorCode,
                 price,
                 stock,
             };

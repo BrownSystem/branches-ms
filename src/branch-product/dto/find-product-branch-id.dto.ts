@@ -9,5 +9,5 @@ export class FindProductBranchIdDto {
 
   @IsOptional()
   @IsBoolean()
-  filterByStock: boolean;
+  filterbystock: boolean;
 }

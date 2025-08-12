@@ -96,13 +96,12 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
   }
 
   async findOneProductBranchId(findProductBranchIdDto: FindProductBranchIdDto) {
-    const { productId, branchId, filterByStock } = findProductBranchIdDto;
-
+    const { productId, branchId, filterbystock } = findProductBranchIdDto;
     const branchProduct = await this.eBranchProduct.findFirst({
       where: { branchId, productId, available: true },
     });
 
-    if (filterByStock) {
+    if (filterbystock) {
       const branchProduct = await this.eBranchProduct.findFirst({
         where: {
           branchId,
@@ -118,7 +117,6 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
           '[BRANCH_PRODUCT_ID] Branch product not found',
         );
       }
-
       return branchProduct;
     }
 

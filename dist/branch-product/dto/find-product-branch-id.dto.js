@@ -14,6 +14,7 @@ const class_validator_1 = require("class-validator");
 class FindProductBranchIdDto {
     productId;
     branchId;
+    filterbystock;
 }
 exports.FindProductBranchIdDto = FindProductBranchIdDto;
 __decorate([
@@ -24,4 +25,9 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], FindProductBranchIdDto.prototype, "branchId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], FindProductBranchIdDto.prototype, "filterbystock", void 0);
 //# sourceMappingURL=find-product-branch-id.dto.js.map

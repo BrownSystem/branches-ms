@@ -48,7 +48,6 @@ let BranchesService = BranchesService_1 = class BranchesService extends client_1
                     productId: product.id,
                     branchId: newBranch.id,
                     stock: 0,
-                    colorCode: 'default',
                 }));
                 await this.eBranchProduct.createMany({
                     data: createManyBranchProducts,
@@ -103,7 +102,6 @@ let BranchesService = BranchesService_1 = class BranchesService extends client_1
                 branchProducts: {
                     select: {
                         productId: true,
-                        colorCode: true,
                         stock: true,
                     },
                 },
@@ -139,12 +137,13 @@ let BranchesService = BranchesService_1 = class BranchesService extends client_1
         if (!branchId) {
             return { message: 'Branch not found', statusCode: common_1.HttpStatus.NOT_FOUND };
         }
-        const { name, location } = updateBranchDto;
+        const { name, location, available } = updateBranchDto;
         const updatedBranch = await this.eBranch.update({
             where: { id },
             data: {
                 name,
                 location: location || 'no tiene ubicación',
+                available,
             },
         });
         return updatedBranch;

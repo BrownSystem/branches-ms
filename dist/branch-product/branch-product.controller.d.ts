@@ -10,9 +10,8 @@ export declare class BranchProductController {
     create(createBranchProductDto: CreateBranchProductDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }[] | {
         message: string;
@@ -21,9 +20,8 @@ export declare class BranchProductController {
     findOneProductBranchId(findProductBranchIdDto: FindProductBranchIdDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }>;
     productsStockAtBranchId(paginationDto: PaginationDto): Promise<{
@@ -60,9 +58,8 @@ export declare class BranchProductController {
     searchByProductIdDeRegistration(updateBranchProductDto: UpdateBranchProductToRegister): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     } | {
         message: string;
@@ -78,9 +75,8 @@ export declare class BranchProductController {
         data: {
             id: string;
             available: boolean;
-            branchId: string;
             productId: string;
-            colorCode: string;
+            branchId: string;
             stock: number;
         };
         error?: undefined;
@@ -93,17 +89,15 @@ export declare class BranchProductController {
     increaseStock(manipulateStockDto: ManipulateStockDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }>;
     decreaseStock(manipulateStockDto: ManipulateStockDto): Promise<{
         id: string;
         available: boolean;
-        branchId: string;
         productId: string;
-        colorCode: string;
+        branchId: string;
         stock: number;
     }>;
 }

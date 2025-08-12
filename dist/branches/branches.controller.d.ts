@@ -7,14 +7,14 @@ export declare class BranchesController {
     create(createBranchDto: CreateBranchDto): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     }>;
     findAll(): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     }[]>;
     findOne(payload: {
         id: string;
@@ -22,7 +22,6 @@ export declare class BranchesController {
         branchProducts: {
             description: any;
             productId: string;
-            colorCode: string;
             stock: number;
         }[];
         name: string;
@@ -34,8 +33,8 @@ export declare class BranchesController {
     }): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     } | {
         message: string;
         status: import("@nestjs/common").HttpStatus;
@@ -43,8 +42,8 @@ export declare class BranchesController {
     update(updateBranchDto: UpdateBranchDto): Promise<{
         name: string;
         location: string;
-        id: string;
         available: boolean;
+        id: string;
     } | {
         message: string;
         statusCode: import("@nestjs/common").HttpStatus;

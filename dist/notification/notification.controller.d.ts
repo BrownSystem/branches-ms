@@ -6,8 +6,8 @@ export declare class NotificationController {
     private readonly notificationService;
     constructor(notificationService: NotificationService);
     create(dto: CreateNotificationDto): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -16,8 +16,8 @@ export declare class NotificationController {
         createdAt: Date;
     }>;
     findAll(query: QueryNotificationDto): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -26,8 +26,8 @@ export declare class NotificationController {
         createdAt: Date;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -36,8 +36,8 @@ export declare class NotificationController {
         createdAt: Date;
     } | null>;
     update(dto: UpdateNotificationDto): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
@@ -46,8 +46,8 @@ export declare class NotificationController {
         createdAt: Date;
     }>;
     softDelete(id: string): Promise<{
-        id: string;
         available: boolean;
+        id: string;
         message: string;
         branchId: string;
         title: string;
