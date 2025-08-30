@@ -14,20 +14,20 @@ export declare class BranchProductService extends PrismaClient implements OnModu
     constructor(client: ClientProxy);
     onModuleInit(): void;
     create(createDto: CreateBranchProductDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }[] | {
         message: string;
         status: HttpStatus;
     }>;
     findOneProductBranchId(findProductBranchIdDto: FindProductBranchIdDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }>;
     productsStockAtBranchId(paginationDto: PaginationDto): Promise<{
@@ -61,24 +61,24 @@ export declare class BranchProductService extends PrismaClient implements OnModu
         status?: undefined;
     }>;
     increaseStock(dto: ManipulateStockDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }>;
     decreaseStock(dto: ManipulateStockDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }>;
     unregisterBranchProduct(dto: UpdateBranchProductToRegister): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     } | {
         message: string;
@@ -92,10 +92,10 @@ export declare class BranchProductService extends PrismaClient implements OnModu
         message: string;
         status: HttpStatus;
         data: {
-            id: string;
             available: boolean;
-            productId: string;
+            id: string;
             branchId: string;
+            productId: string;
             stock: number;
         };
         error?: undefined;

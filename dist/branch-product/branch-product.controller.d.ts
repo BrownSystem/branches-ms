@@ -8,20 +8,20 @@ export declare class BranchProductController {
     private readonly branchProductService;
     constructor(branchProductService: BranchProductService);
     create(createBranchProductDto: CreateBranchProductDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }[] | {
         message: string;
         status: import("@nestjs/common").HttpStatus;
     }>;
     findOneProductBranchId(findProductBranchIdDto: FindProductBranchIdDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }>;
     productsStockAtBranchId(paginationDto: PaginationDto): Promise<{
@@ -56,10 +56,10 @@ export declare class BranchProductController {
     }>;
     generatedFullInventaryInExcel(): Promise<Buffer<ArrayBufferLike>>;
     searchByProductIdDeRegistration(updateBranchProductDto: UpdateBranchProductToRegister): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     } | {
         message: string;
@@ -73,10 +73,10 @@ export declare class BranchProductController {
         message: string;
         status: import("@nestjs/common").HttpStatus;
         data: {
-            id: string;
             available: boolean;
-            productId: string;
+            id: string;
             branchId: string;
+            productId: string;
             stock: number;
         };
         error?: undefined;
@@ -87,17 +87,17 @@ export declare class BranchProductController {
         data?: undefined;
     }>;
     increaseStock(manipulateStockDto: ManipulateStockDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }>;
     decreaseStock(manipulateStockDto: ManipulateStockDto): Promise<{
-        id: string;
         available: boolean;
-        productId: string;
+        id: string;
         branchId: string;
+        productId: string;
         stock: number;
     }>;
 }
