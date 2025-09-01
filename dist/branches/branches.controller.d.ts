@@ -5,16 +5,16 @@ export declare class BranchesController {
     private readonly branchesService;
     constructor(branchesService: BranchesService);
     create(createBranchDto: CreateBranchDto): Promise<{
+        id: string;
         name: string;
         location: string;
         available: boolean;
-        id: string;
     }>;
     findAll(): Promise<{
+        id: string;
         name: string;
         location: string;
         available: boolean;
-        id: string;
     }[]>;
     findOne(payload: {
         id: string;
@@ -24,26 +24,26 @@ export declare class BranchesController {
             productId: string;
             stock: number;
         }[];
+        id: string;
         name: string;
         location: string;
-        id: string;
     }>;
     findOneById(payload: {
         id: string;
     }): Promise<{
+        id: string;
         name: string;
         location: string;
         available: boolean;
-        id: string;
     } | {
         message: string;
         status: import("@nestjs/common").HttpStatus;
     }>;
     update(updateBranchDto: UpdateBranchDto): Promise<{
+        id: string;
         name: string;
         location: string;
         available: boolean;
-        id: string;
     } | {
         message: string;
         statusCode: import("@nestjs/common").HttpStatus;
