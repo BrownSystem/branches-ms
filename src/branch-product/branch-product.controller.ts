@@ -8,8 +8,8 @@ import {
   UpdateBranchProductDto,
   UpdateBranchProductToRegister,
 } from './dto/update-branch-product.dto';
-import { find } from 'rxjs';
 import { FindProductBranchIdDto } from './dto/find-product-branch-id.dto';
+import { UpdateStockDto } from './dto/update-stock.dto';
 
 @Controller()
 export class BranchProductController {
@@ -17,6 +17,7 @@ export class BranchProductController {
 
   @MessagePattern({ cmd: 'emit_create_branch_product' })
   create(@Payload() createBranchProductDto: CreateBranchProductDto) {
+    console.log(createBranchProductDto);
     return this.branchProductService.create(createBranchProductDto);
   }
 
@@ -70,5 +71,15 @@ export class BranchProductController {
   @MessagePattern({ cmd: 'descrease_branch_product_stock' })
   decreaseStock(@Payload() manipulateStockDto: ManipulateStockDto) {
     return this.branchProductService.decreaseStock(manipulateStockDto);
+  }
+
+  @MessagePattern({ cmd: 'emit_update_branch_product' })
+  update(@Payload() updateBranchProductDto: CreateBranchProductDto) {
+    return this.branchProductService.update(updateBranchProductDto);
+  }
+
+  @MessagePattern({ cmd: 'branch_product_stock_update' })
+  async updateStock(@Payload() payload: UpdateStockDto[]) {
+    return this.branchProductService.updateFromList(payload);
   }
 }

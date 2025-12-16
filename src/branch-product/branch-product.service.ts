@@ -14,9 +14,13 @@ import { firstValueFrom, find } from 'rxjs';
 import { ManipulateStockDto } from './dto/manipulate-stock.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { PaginateWithMeta } from './dto/pagination.helper';
-import { UpdateBranchProductToRegister } from './dto/update-branch-product.dto';
+import {
+  UpdateBranchProductDto,
+  UpdateBranchProductToRegister,
+} from './dto/update-branch-product.dto';
 import { FindProductBranchIdDto } from './dto/find-product-branch-id.dto';
 import { NATS_SERVICE } from 'src/config';
+import { UpdateStockDto } from './dto/update-stock.dto';
 
 @Injectable()
 export class BranchProductService extends PrismaClient implements OnModuleInit {
@@ -60,6 +64,8 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
 
   async create(createDto: CreateBranchProductDto) {
     const { productId, stock = 0 } = createDto;
+
+    console.log(createDto);
 
     const [branches, product] = await Promise.all([
       this.eBranch.findMany(),
@@ -410,5 +416,69 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
 
     // Acá llamamos al servicio que genera el EXCEL
     return buffer;
+  }
+
+  async update(updateStockDto: CreateBranchProductDto) {
+    try {
+      const { productId, branchId, stock } = updateStockDto;
+
+      // Verificar existencia del registro
+      const branchProduct = await this.eBranchProduct.findUnique({
+        where: {
+          branchId_productId: { branchId, productId },
+        },
+      });
+
+      if (!branchProduct) {
+        throw new RpcException({
+          message: `No existe el producto ${productId} en la sucursal ${branchId}`,
+          status: HttpStatus.NOT_FOUND,
+        });
+      }
+
+      // Actualizar el stock (puede ser positivo o negativo)
+      const updated = await this.eBranchProduct.update({
+        where: {
+          branchId_productId: { branchId, productId },
+        },
+        data: {
+          stock,
+        },
+      });
+
+      return {
+        message: 'Stock actualizado correctamente',
+        data: updated,
+      };
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  async updateFromList(dto: UpdateStockDto[]) {
+    try {
+      const updates = dto.map((item) =>
+        this.eBranchProduct.upsert({
+          where: {
+            branchId_productId: {
+              branchId: item.branchId,
+              productId: item.productId,
+            },
+          },
+          update: {
+            stock: item.stock,
+          },
+          create: {
+            branchId: item.branchId,
+            productId: item.productId,
+            stock: item.stock,
+          },
+        }),
+      );
+
+      return await Promise.all(updates);
+    } catch (error) {
+      throw new RpcException(error);
+    }
   }
 }

@@ -28,6 +28,11 @@ export class BranchesController {
     return this.branchesService.findOneBranchById(payload.id);
   }
 
+  @MessagePattern({ cmd: 'find_one_branch_by_name' })
+  findOneByName(@Payload() payload: { name: string }) {
+    return this.branchesService.findOneByName(payload.name);
+  }
+
   @MessagePattern({ cmd: 'update_branch' })
   update(@Payload() updateBranchDto: UpdateBranchDto) {
     return this.branchesService.update(updateBranchDto.id, updateBranchDto);

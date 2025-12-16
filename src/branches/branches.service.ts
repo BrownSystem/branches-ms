@@ -20,6 +20,16 @@ export class BranchesService extends PrismaClient implements OnModuleInit {
     super();
   }
 
+  private getAbbreviation(name: string): string {
+    if (!name) return '';
+    // Dividimos en palabras, tomamos la primera letra de cada una y la pasamos a mayúsculas
+    return name
+      .split(' ')
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase();
+  }
+
   onModuleInit() {
     this.logger.log('BranchesService module initialized');
     void this.$connect();
@@ -73,11 +83,21 @@ export class BranchesService extends PrismaClient implements OnModuleInit {
   }
 
   async findAll() {
-    return await this.eBranch.findMany({
+    const branches = await this.eBranch.findMany({
       where: {
         available: true,
       },
+      select: {
+        id: true,
+        name: true,
+        // otras columnas que quieras
+      },
     });
+
+    return branches.map((branch) => ({
+      ...branch,
+      abbreviation: this.getAbbreviation(branch.name),
+    }));
   }
 
   async findOneBranchById(id: string) {
@@ -150,6 +170,20 @@ export class BranchesService extends PrismaClient implements OnModuleInit {
       ...branch,
       branchProducts: [],
     };
+  }
+
+  async findOneByName(name: string) {
+    const branch = await this.eBranch.findFirst({
+      where: { name, available: true },
+      select: {
+        id: true,
+        name: true,
+        location: true,
+      },
+    });
+
+    // Si no hay productos, devolver branch sin descripciones
+    return branch;
   }
 
   async update(id: string, updateBranchDto: UpdateBranchDto) {

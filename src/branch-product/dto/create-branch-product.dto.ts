@@ -8,14 +8,12 @@ import {
 
 export class CreateBranchProductDto {
   @IsString()
-  @IsOptional()
-  branchId?: string;
+  branchId: string;
 
   @IsString()
   productId: string;
 
   @IsNumber()
-  @IsOptional()
   stock: number;
 
   @IsBoolean()
