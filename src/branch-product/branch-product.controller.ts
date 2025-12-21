@@ -17,7 +17,6 @@ export class BranchProductController {
 
   @MessagePattern({ cmd: 'emit_create_branch_product' })
   create(@Payload() createBranchProductDto: CreateBranchProductDto) {
-    console.log(createBranchProductDto);
     return this.branchProductService.create(createBranchProductDto);
   }
 

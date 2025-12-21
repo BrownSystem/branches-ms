@@ -21,6 +21,7 @@ import {
 import { FindProductBranchIdDto } from './dto/find-product-branch-id.dto';
 import { NATS_SERVICE } from 'src/config';
 import { UpdateStockDto } from './dto/update-stock.dto';
+import { stat } from 'fs';
 
 @Injectable()
 export class BranchProductService extends PrismaClient implements OnModuleInit {
@@ -63,26 +64,34 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
   }
 
   async create(createDto: CreateBranchProductDto) {
-    const { productId, stock = 0 } = createDto;
+    try {
+      const { productId, stock = 0 } = createDto;
 
-    console.log(createDto);
+      // 1️⃣ Obtener branches y producto en paralelo
+      const [branches, product] = await Promise.all([
+        this.eBranch.findMany({ select: { id: true } }),
+        firstValueFrom(
+          this.client.send({ cmd: 'find_one_product' }, { id: productId }),
+        ),
+      ]);
 
-    const [branches, product] = await Promise.all([
-      this.eBranch.findMany(),
-      firstValueFrom(
-        this.client.send({ cmd: 'find_one_product' }, { id: productId }),
-      ),
-    ]);
+      // 2️⃣ Validación
+      if (!product) {
+        throw new RpcException({
+          message: 'Product not found',
+          status: HttpStatus.BAD_REQUEST,
+        });
+      }
 
-    if (!product) {
-      return {
-        message: 'Product not found',
-        status: HttpStatus.BAD_REQUEST,
-      };
-    }
+      if (!branches.length) {
+        throw new RpcException({
+          message: 'No branches found',
+          status: HttpStatus.BAD_REQUEST,
+        });
+      }
 
-    return Promise.all(
-      branches.map((branch) =>
+      // 3️⃣ Transacción: todo o nada
+      const operations = branches.map((branch) =>
         this.eBranchProduct.upsert({
           where: {
             branchId_productId: {
@@ -97,42 +106,61 @@ export class BranchProductService extends PrismaClient implements OnModuleInit {
             stock,
           },
         }),
-      ),
-    );
+      );
+
+      const create = await this.$transaction(operations);
+      // 4️⃣ Respuesta liviana (NATS safe)
+      return create;
+    } catch (err) {
+      throw new RpcException({
+        message: `[CREATE_BRANCH_PRODUCT] Error creating branch product: ${err.message}`,
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
   }
 
   async findOneProductBranchId(findProductBranchIdDto: FindProductBranchIdDto) {
-    const { productId, branchId, filterbystock } = findProductBranchIdDto;
-    const branchProduct = await this.eBranchProduct.findFirst({
-      where: { branchId, productId, available: true },
-    });
-
-    if (filterbystock) {
+    try {
+      const { productId, branchId, filterbystock } = findProductBranchIdDto;
       const branchProduct = await this.eBranchProduct.findFirst({
-        where: {
-          branchId,
-          productId,
-          available: true,
-          stock: {
-            not: 0,
-          },
-        },
+        where: { branchId, productId, available: true },
       });
-      if (!branchProduct) {
-        throw new BadRequestException(
-          '[BRANCH_PRODUCT_ID] Branch product not found',
-        );
+
+      if (filterbystock) {
+        const branchProduct = await this.eBranchProduct.findFirst({
+          where: {
+            branchId,
+            productId,
+            available: true,
+            stock: {
+              not: 0,
+            },
+          },
+        });
+        if (!branchProduct) {
+          throw new RpcException({
+            message:
+              '[BRANCH_PRODUCT_ID] Producto no encontradoen la sucursal o sin stock',
+            status: HttpStatus.BAD_REQUEST,
+          });
+        }
+        return branchProduct;
       }
+
+      if (!branchProduct) {
+        throw new RpcException({
+          message: '[BRANCH_PRODUCT_ID] Producto no encontrado en la sucursal',
+          status: HttpStatus.BAD_REQUEST,
+        });
+      }
+
       return branchProduct;
+    } catch (error) {
+      throw new RpcException({
+        message: `[FIND_BRANCH_PRODUCT_ID] Error en obtener datos: ${error.message}`,
+        status: HttpStatus.NOT_FOUND,
+      });
     }
-
-    if (!branchProduct) {
-      throw new BadRequestException(
-        '[BRANCH_PRODUCT_ID] Branch product not found',
-      );
-    }
-
-    return branchProduct;
   }
 
   async productsStockAtBranchId(paginationDto: PaginationDto) {

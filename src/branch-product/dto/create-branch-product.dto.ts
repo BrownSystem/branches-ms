@@ -8,6 +8,7 @@ import {
 
 export class CreateBranchProductDto {
   @IsString()
+  @IsOptional()
   branchId: string;
 
   @IsString()
